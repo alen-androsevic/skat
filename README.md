@@ -1,3 +1,5 @@
+<img alt="" src="assets/icon.svg" width="96">
+
 # skat
 
 skat (skill + cat) builds a Claude Code skill from parts, so you can work on one section of a SKILL.md or reference file at a time.
