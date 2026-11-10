@@ -1,0 +1,9 @@
+{
+  "name": "skat",
+  "description": "Creates a new Claude Code skill through a few multiple-choice questions, as parts that skat builds into skills/<name>/",
+  "author": { "name": "Alen Androsevic", "url": "https://github.com/alen-androsevic" },
+  "homepage": "https://github.com/alen-androsevic/skat",
+  "repository": "https://github.com/alen-androsevic/skat",
+  "license": "MIT",
+  "keywords": ["skills", "authoring", "skat"]
+}

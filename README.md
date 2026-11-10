@@ -20,6 +20,7 @@ Inside a skill's repository:
 skat            # build skills/<name>/ from dev/skill/
 skat --check    # exit 1 if skills/<name>/ is out of date
 skat --dry-run  # show what a build would change
+skat split      # turn a finished skill into parts in dev/skill/
 ```
 
 Add `--json` for machine-readable output. Exit codes: 0 built or up to date, 1 out of date (`--check`), 2 error.
@@ -54,9 +55,31 @@ skills/<name>/                    built: don't edit by hand
 
 Commit the parts and the built files together. Plugins and plain skill installs read `skills/<name>/`.
 
+## Make a new skill
+
+The skat plugin asks a few multiple-choice questions, writes a first draft with Claude's skill creator, and splits it into parts. Install it from the [alen-androsevic marketplace](https://github.com/alen-androsevic/skills):
+
+```bash
+claude plugin marketplace add alen-androsevic/skills
+claude plugin install skat@alen-androsevic
+```
+
+Then, in a new repository, run `/skat:new-skill` or ask Claude Code to make a skill. It needs the `skat` binary on your `PATH`.
+
+Without the plugin, write the skill to `skills/<name>/` with `/skill-creator` or by hand, then split it:
+
+```bash
+skat split      # cut skills/<name>/ into parts in dev/skill/
+skat --check    # exit 0: the parts rebuild it exactly
+```
+
+`skat split` cuts each `.md` file at its frontmatter and at every `#` and `##` heading, and copies the other files. A `.md` file whose blank lines wouldn't rebuild exactly stays one part. It takes the skill directory as an argument when `skills/` holds more than one, and stops if `dev/skill/` exists.
+
 ## Develop
 
 ```bash
 cargo test
 cargo run -- --help
 ```
+
+This repository is also the skat plugin. Its skill, `new-skill`, is built with skat itself: edit `dev/skill/`, then run `cargo run`.
