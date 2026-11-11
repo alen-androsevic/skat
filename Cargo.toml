@@ -3,7 +3,7 @@ name = "skat"
 version = "0.1.0"
 edition = "2024"
 description = "Builds skills/<name>/ from the parts in dev/skill/"
-license = "MIT"
+license = "MIT-0"
 publish = false
 
 [dependencies]
