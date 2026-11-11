@@ -292,11 +292,15 @@ fn split(args: &[String]) -> Result<ExitCode, String> {
         for path in &written {
             println!("{verb}  {path}");
         }
-        let part_count = planned.len() - copied.len();
+        let count = |n: usize, word: &str| match n {
+            1 => format!("1 {word}"),
+            n => format!("{n} {word}s"),
+        };
         println!(
-            "{summary} {} into {SRC}/: {} files in {part_count} parts, {} copied as they are.",
+            "{summary} {} into {SRC}/: {} in {}, {} copied as they are.",
             from.display(),
-            split_files.len(),
+            count(split_files.len(), "file"),
+            count(planned.len() - copied.len(), "part"),
             copied.len()
         );
         if !opts.dry_run {
@@ -375,10 +379,16 @@ fn cut(text: &str) -> Option<Vec<(String, String)>> {
 }
 
 /// A heading as a file name: lowercase ASCII letters and digits joined by hyphens, cut after the
-/// last whole word that fits in 32 characters.
+/// last whole word that fits in 32 characters. A step number such as `2.` is left out, since the
+/// part's own number already orders it.
 fn slug(title: &str) -> String {
+    let title = title.trim().trim_end_matches('#');
+    let unnumbered = title
+        .split_once(". ")
+        .filter(|(n, _)| !n.is_empty() && n.chars().all(|c| c.is_ascii_digit()))
+        .map_or(title, |(_, rest)| rest);
     let mut s = String::new();
-    for c in title.trim().trim_end_matches('#').chars() {
+    for c in unnumbered.chars() {
         if c.is_ascii_alphanumeric() {
             s.push(c.to_ascii_lowercase());
         } else if !s.is_empty() && !s.ends_with('-') {
@@ -712,6 +722,10 @@ mod tests {
 
     #[test]
     fn slug_makes_safe_file_names() {
+        assert_eq!(slug("1. Find the range"), "find-the-range");
+        assert_eq!(slug("2024. A year"), "a-year");
+        assert_eq!(slug("v2. Upgrade"), "v2-upgrade");
+        assert_eq!(slug("2. "), "2");
         assert_eq!(
             slug("Load the driver: web & mobile ##\n"),
             "load-the-driver-web-mobile"
