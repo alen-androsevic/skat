@@ -57,7 +57,7 @@ Commit the parts and the built files together. Plugins and plain skill installs 
 
 ## Make a new skill
 
-The skat plugin asks a few multiple-choice questions, writes a first draft with Claude's skill creator, and splits it into parts. Install it from the [alen-androsevic marketplace](https://github.com/alen-androsevic/skills):
+The skat plugin asks a few multiple-choice questions, writes a first draft, grills it with [grillmeister](https://github.com/alen-androsevic/grillmeister), and splits it into parts. Install it from the [alen-androsevic marketplace](https://github.com/alen-androsevic/skills):
 
 ```bash
 claude plugin marketplace add alen-androsevic/skills

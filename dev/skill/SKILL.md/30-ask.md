@@ -9,6 +9,5 @@ Then ask the rest in one AskUserQuestion call. Leave out a question the request 
 | Name | What should the skill be called? | Two or three names you suggest: lowercase letters, digits and hyphens, at most 64 characters, named for the job |
 | Loading | When should Claude use it? | Automatically when a task matches (recommended); only when typed as `/<name>` |
 | Files | What does it need besides SKILL.md? (multiSelect) | Nothing else (recommended for a first draft); reference files Claude reads when needed; scripts for steps that must come out the same every time; assets such as templates |
-| Tests | Test it before you stop? | No, write the first draft, about 5 minutes (recommended); yes, run the skill creator's evals, 30 minutes or more |
 
 "Only when typed" adds `disable-model-invocation: true` to the frontmatter.

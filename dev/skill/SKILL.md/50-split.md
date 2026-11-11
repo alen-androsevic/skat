@@ -1,4 +1,4 @@
-## 4. Split it into parts
+## 5. Split it into parts
 
 ```bash
 skat split skills/<name>

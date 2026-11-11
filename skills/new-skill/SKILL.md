@@ -1,11 +1,11 @@
 ---
 name: new-skill
-description: Create a new Claude Code skill through a few multiple-choice questions, written as skat parts in dev/skill/ so each section can be edited on its own. Use when the user wants to create, start, make or scaffold a skill or plugin skill, or says /new-skill. Not for changing an existing skill; edit its parts in dev/skill/ and run skat.
+description: Create a new Claude Code skill through a few multiple-choice questions, grill the draft with grillmeister, and write it as skat parts in dev/skill/ so each section can be edited on its own. Use when the user wants to create, start, make or scaffold a skill or plugin skill, or says /new-skill. Not for changing an existing skill; edit its parts in dev/skill/ and run skat.
 ---
 
 # New skill
 
-Makes a new skill in the working repository: a few questions, a first draft, then `skat split` turns the draft into parts in `dev/skill/`. The finished skill is built into `skills/<name>/`.
+Makes a new skill in the working repository: a few questions, a first draft, a grilling, then `skat split` turns the draft into parts in `dev/skill/`. The finished skill is built into `skills/<name>/`.
 
 ## 1. Check first
 
@@ -27,21 +27,24 @@ Then ask the rest in one AskUserQuestion call. Leave out a question the request 
 | Name | What should the skill be called? | Two or three names you suggest: lowercase letters, digits and hyphens, at most 64 characters, named for the job |
 | Loading | When should Claude use it? | Automatically when a task matches (recommended); only when typed as `/<name>` |
 | Files | What does it need besides SKILL.md? (multiSelect) | Nothing else (recommended for a first draft); reference files Claude reads when needed; scripts for steps that must come out the same every time; assets such as templates |
-| Tests | Test it before you stop? | No, write the first draft, about 5 minutes (recommended); yes, run the skill creator's evals, 30 minutes or more |
 
 "Only when typed" adds `disable-model-invocation: true` to the frontmatter.
 
 ## 3. Write the draft
 
-Write the finished skill to `skills/<name>/`, as one `SKILL.md` plus the files the user chose.
+Write the skill to `skills/<name>/`, as one `SKILL.md` plus the files the user chose.
 
-- If the skill creator is installed (`skill-creator` in the skill list, with or without a plugin prefix), use it, and pass on the answers. Tell it where things go: the skill in `skills/<name>/`, its workspace in `dev/<name>-workspace/`, never inside `skills/`. Without tests, the skill creator stops after the first draft.
-- Otherwise write it yourself: the frontmatter with `name` and `description`, then the steps. The description says what the skill does and when to use it, in the words a user would type, and when not to.
-- With tests, move `skills/<name>/evals/` to `dev/evals/` when the skill creator is done, so the evals don't ship with the skill.
+- The frontmatter has `name` and `description`. The description says what the skill does and when to use it, in the words a user would type, and when not to.
+- The body is the steps, each under a `#` or `##` heading with one blank line before it. skat cuts the parts there.
+- Keep SKILL.md under 500 lines. Each reference file gets a line in SKILL.md saying when to read it.
 
-Give each section of SKILL.md and of each reference file a `#` or `##` heading, with one blank line before it. skat cuts the parts there.
+## 4. Grill the draft
 
-## 4. Split it into parts
+If grillmeister is installed (`grillmeister` in the skill list, with or without a plugin prefix), run it on `skills/<name>/`. It asks the user about each gap in the draft, one question at a time, and fixes the draft after every answer.
+
+If it isn't installed, say so in one line with the install command, `claude plugin install grillmeister@alen-androsevic`, and go on.
+
+## 5. Split it into parts
 
 ```bash
 skat split skills/<name>
@@ -52,7 +55,7 @@ skat --check
 
 A `.md` file listed as copied, rather than split, either has one section or blank lines skat can't rebuild exactly. It still builds; it just stays one part.
 
-## 5. Report
+## 6. Report
 
 Show the parts as a tree, then the next step:
 
@@ -64,4 +67,4 @@ dev/skill/SKILL.md/10-<first-section>.md
 
 Next: edit the parts in `dev/skill/`, run `skat`, and commit `dev/skill/` and `skills/<name>/` together. Don't commit, push or publish for the user.
 
-Later changes go in `dev/skill/`, because `skat` overwrites `skills/<name>/`. If the skill creator edits `skills/<name>/` again, run `skat --check` first: when it exits 0, nothing in `dev/skill/` is lost by removing it and running `skat split` again.
+Later changes go in `dev/skill/`, because `skat` overwrites `skills/<name>/`. If another tool edits `skills/<name>/` directly, run `skat --check` first: when it exits 0, nothing in `dev/skill/` is lost by removing it and running `skat split` again.
